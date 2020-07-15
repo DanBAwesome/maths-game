@@ -36,3 +36,50 @@ body {
     font-size: 12px;
     font-weight: bold;
 }
+
+#inputContainer {
+    position: relative;
+    display: inline-flex;
+    border: 1px solid #dedede;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+#inputContainer > * {
+    background-color: transparent;
+}
+
+#inputContainer > div {
+    background-color: #dedede;
+    min-width: 40px;
+}
+
+#inputContainer > div::after {
+    display: block;
+    position: relative;
+    top: 20%;
+}
+
+#inputContainer[data-correct=true] > div::after {
+    content: "✔️";
+}
+
+#inputContainer[data-correct=false] > div::after {
+    content: "❌";
+}
+
+#inputContainer > input {
+    border: 0;
+}
+
+#inputContainer[data-correct=true] {
+    background-color: #c5f3c578;
+}
+
+#inputContainer[data-correct=false] {
+    background-color: #f3c5c578;
+}
+
+#inputContainer > input:focus {
+    box-shadow: none;
+}

@@ -7,44 +7,35 @@ var startGame = function (selectedOperators, maxSumLength, callback) {
     var timer;
     var seconds = 10;
     var score = 0;
+    var paused = false;
 
     var gameSetup = function () {
         numbers.length = 2;
         createSum();
         createDOM();
         createEventListeners();
-        $("#input").focus();
+        $("#inputContainer > input").focus();
     };
 
     var createEventListeners = function () {
-        $(document).on("input", "#input", function () {
+        $(document).on("input", "#inputContainer > input", function () {
             if (!initInput) {
                 timer = window.setInterval(function () {
-                    seconds--;
-                    $("#gameWindow .card-title").text(setTime());
+                    if (!paused) {
+                        seconds--;
+                        $("#gameWindow .card-title").text(setTime());
 
-                    if(seconds === 0) {
-                        window.clearInterval(timer);
-                        callback(score);
+                        if (seconds === 0) {
+                            window.clearInterval(timer);
+                            callback(score);
+                        }
                     }
                 }, 1000);
                 initInput = true;
             }
 
             if (parseFloat($(this).val()) === answer) {
-                score++;
-                setScore();
-                $("#currentScore").text(setScore());
-                $(this).val("");
-                createSum();
-                $("#currentSum").text(createSumText());
-                seconds++;
-                $("#gameWindow .card-title").text(setTime());
-
-                if(score > highscore) {
-                    highscore = score;
-                    $("#highscore").text(setHighscore());
-                }
+                onCorrectAnswer(this);
             }
         });
     };
@@ -61,16 +52,43 @@ var startGame = function (selectedOperators, maxSumLength, callback) {
             return getOperator(currentOperator, max, number);
         });
 
-        while(answer % 1 !== 0 || answer < 0) {
+        while (answer % 1 !== 0 || answer < 0) {
             createSum();
         }
     };
 
-    var setScore = function() {
+    var onCorrectAnswer = function (inputContext) {
+        paused = true;
+        score++;
+        setScore();
+        console.log($("#inputContainer").data("correct"));
+        $(inputContext).prop("disabled", true);
+        $("#inputContainer").attr("data-correct", true);
+
+        window.setTimeout(function () {
+            $("#currentScore").text(setScore());
+            $(inputContext).val("");
+            createSum();
+            $("#currentSum").text(createSumText());
+            seconds++;
+            $("#gameWindow .card-title").text(setTime());
+
+            if (score > highscore) {
+                highscore = score;
+                $("#highscore").text(setHighscore());
+            }
+            paused = false;
+            $(inputContext).prop("disabled", false);
+            $("#inputContainer").attr("data-correct", false);
+            $(inputContext).focus();
+        }, 1000);
+    }
+
+    var setScore = function () {
         return "Current Score: " + score;
     };
 
-    var setHighscore = function() {
+    var setHighscore = function () {
         return "High Score: " + highscore;
     };
 
@@ -103,7 +121,10 @@ var startGame = function (selectedOperators, maxSumLength, callback) {
     var createDOM = function () {
         $("#gameWindow .card-body").append("<h1 class='card-title'>" + setTime() + "</h1>" +
             "<h3 id='currentSum'>" + createSumText() + "</h3>" +
-            "<input class='form-control w-25 m-auto' id='input' type='number' autocomplete='off' />" +
+            "<div id='inputContainer' data-correct='false'>" +
+            "<input class='form-control  m-auto' type='number' autocomplete='off' />" +
+            "<div></div>" +
+            "</div>" +
             "<p id='currentScore'>" + setScore() + "</p>" +
             "<p id='highscore'>" + setHighscore() + "</p>"
         );
