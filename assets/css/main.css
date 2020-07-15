@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel&display=swap');
+
+body {
+    font-family: "Cinzel", serif;
+}
+
+.card {
+    margin-top: 20px;
+    box-shadow: 2px 2px #0000004f;
+}
+
+#settings {
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+#settings > div:first-of-type {
+    display: inline-flex;
+    justify-content: center;
+}
+
+#settings > div:first-of-type > div:not(:last-of-type) {
+    margin-right: 20px;
+}
+
+.custom-control-label::before, .custom-control-label::after {
+    top: 0.35rem;
+}
+
+#numRange {
+    margin-top: 20px;
+}
+
+#finalScore {
+    font-size: 12px;
+    font-weight: bold;
+}
