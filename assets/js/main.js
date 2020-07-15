@@ -5,9 +5,9 @@ var highscore = 0;
     var sumLength = 10;
 
     var setup = function () {
-        var localHighscore = localStorage.getItem("highscore");
-        if (localHighscore) {
-            highscore = localHighscore;
+        var sessionHighscore = sessionStorage.getItem("highscore");
+        if (sessionHighscore) {
+            highscore = sessionHighscore;
         }
         $("#gameWindow .card-body").text("");
         $("#gameWindow .card-body").append("<h1 class='card-title'>10 Second Maths Game</h1>" +
@@ -56,7 +56,6 @@ var highscore = 0;
     var addOperatorChoices = function() {
         for(var checkbox of $("#settings [type=checkbox]")) {
             var selectedIndex = selectedOperators.indexOf($(checkbox).val());
-            console.log(selectedIndex)
             if(checkbox.checked && selectedIndex === -1) {  
                 selectedOperators.push($(checkbox).val())
             }
@@ -78,7 +77,7 @@ var highscore = 0;
             }
             $(this).closest(".card-body").text("");
             startGame(selectedOperators, sumLength, function (score) {
-                localStorage.setItem("highscore", highscore);
+                sessionStorage.setItem("highscore", highscore);
                 $(document).off();
                 setup();
                 addScoreToDOM(score);
